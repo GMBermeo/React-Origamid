@@ -4,7 +4,7 @@
     <title></title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="css/style.css" rel="stylesheet" />
+    <!-- <link href="css/style.css" rel="stylesheet" /> -->
     <title>React para Iniciantes</title>
 
     <!-- Carrega o React, React Dom e Babel -->
@@ -28,18 +28,53 @@
       // Cria um componente chamado App
       // O componente retorna JSX e por isso
       // o Babel irá transformar o mesmo
-      function App() {
-        return <div>Meu App</div>;
-      }
 
-      class Button extends React.Component {
-        render() {
-          return <button>Comprar</button>;
+      const Compras = () => {
+        const [contador, setContador] = React.useState(0);
+        console.log(contador);
+        function comprar() {
+          setContador(contador + 1);
         }
-      }
+        return (
+          <div>
+            <button onClick={comprar}>Comprar</button>
+            <p>Total: {contador}</p>
+            <p>Preço: R$ {contador}</p>
+          </div>
+        );
+      };
+
+      const Button = () => {
+        function handleClick(event) {
+          console.log(event.target.innerText);
+        }
+
+        return <button onClick={handleClick}>Comprar</button>;
+        // return React.createElement("button", null, "Clique Aqui");
+      };
+
+      const Titulo = () => {
+        const numero = Math.random() * 1000;
+        return <h1>Meu Titulo {numero}</h1>;
+      };
+
+      const App = () => {
+        return (
+          <div>
+            Meu App
+            <Compras />
+            <Titulo />
+            <Button />
+            <div>
+              Compre aqui também.
+              <Button />
+            </div>
+          </div>
+        );
+      };
 
       // Renderiza o componente App no elemento que tiver id = app
-      ReactDOM.render(<Button />, document.getElementById("app"));
+      ReactDOM.render(<App />, document.getElementById("app"));
     </script>
   </body>
 </html>
