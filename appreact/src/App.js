@@ -1,26 +1,20 @@
 import React from "react";
-import Menu from "./components/Menu";
-import Produtos from "./pages/Produtos";
-import Home from "./pages/Home";
-import Titulo from "./components/Titulo";
-
-// Replique a interface como a apresentada na aula
-// Utilize a array abaixo para mostrar os produtos
-// Quebre em componentes o que precisar ser reutilizado
-// Dica: const { pathname } = window.location; (puxa o caminho do URL)
 
 const App = () => {
-  let Pagina = Home;
-  const { pathname } = window.location;
-  if (pathname === "/Produtos") {
-    Pagina = Produtos;
+  const [contar, setContar] = React.useState(1);
+  const [items, setItems] = React.useState(["Item 1"]);
+
+  function handleClick() {
+    setContar(contar + 1);
+    setItems((item) => [...item, `Item ${contar + 1}`]);
   }
 
   return (
     <>
-      <Menu />
-      <Titulo pathname={pathname} />
-      <Pagina />
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+      <button onClick={handleClick}>Add Item {contar + 1}</button>
     </>
   );
 };
