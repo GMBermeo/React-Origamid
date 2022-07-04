@@ -1,26 +1,38 @@
 import React from "react";
+import Button from "./Components/Button";
+import Produto from "./Components/Produto";
 
 const App = () => {
-  const [contar, setContar] = React.useState(0);
-  const [dados, setDados] = React.useState(null);
+  // Quando o usuário clicar em um dos botões, faça um fetch do produto clicado utilizando a api abaixo
+  // https://ranekapi.origamid.dev/json/api/produto/notebook
+  // https://ranekapi.origamid.dev/json/api/produto/smartphone
+  // Mostre o nome e preço na tela (separe essa informação em um componente Produto.js)
+  // Defina o produto clicado como uma preferência do usuário no localStorage
+  // Quando o usuário entrar no site, se existe um produto no localStorage, faça o fetch do mesmo
+  const [produto, setProduto] = React.useState(null);
+
+  //Executa uma vez
+  React.useEffect(() => {
+    const produtoLocal = window.localStorage.getItem("produto");
+    if (produtoLocal !== null) setProduto(produtoLocal);
+  }, []);
 
   React.useEffect(() => {
-    // se o fetch estivesse fora do useEffect, toda vez que o componente
-    // fosse atualizado, o mesmo seria executado
-    fetch("https://ranekapi.origamid.dev/json/api/produto/notebook")
-      .then((response) => response.json())
-      .then((json) => setDados(json));
-  }, []);
+    if (produto !== null) window.localStorage.setItem("produto", produto);
+  }, [produto]);
+
+  function fetchProduto({ target }) {
+    setProduto(target.innerText);
+  }
 
   return (
     <div>
-      {dados && (
-        <div>
-          <h1>{dados.nome}</h1>
-          <p>R$ {dados.preco * contar}</p>
-        </div>
-      )}
-      <button onClick={() => setContar(contar + 1)}>{contar}</button>
+      <h1>Preferência: {produto}</h1>
+      <Button onClick={fetchProduto} style={{ margin: ".5rem" }}>
+        notebook
+      </Button>
+      <Button onClick={fetchProduto}>smartphone</Button>
+      <Produto produto={produto} />
     </div>
   );
 };
