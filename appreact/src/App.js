@@ -1,52 +1,75 @@
 import React from "react";
-import useLocalStorage from "./useLocalStorage";
-import useFetch from "./useFetch";
+import useFetch from "./Hooks/useFetch";
+
+const camposFormulario = [
+  { id: "nome", label: "Nome", type: "text" },
+  { id: "email", label: "Email", type: "email" },
+  { id: "senha", label: "Senha", type: "password" },
+  { id: "cep", label: "CEP", type: "text" },
+  { id: "rua", label: "Rua", type: "text" },
+  { id: "numero", label: "Número", type: "text" },
+  { id: "bairro", label: "Bairro", type: "text" },
+  { id: "cidade", label: "Cidade", type: "text" },
+  { id: "estado", label: "Estado", type: "text" },
+];
 
 const App = () => {
-  const [produto, setProduto] = useLocalStorage("produto", "");
-  const { request, data, loading, error } = useFetch();
+  // Faça um fetch (POST) para a API abaixo
+  // Para a criação ser aceita é necessário enviar dodos de:
+  // nome, email, senha, cep, rua, numero, bairro, cidade e estado
 
-  React.useEffect(() => {
-    async function fetchData() {
-      const { response, json } = await request(
-        "https://ranekapi.origamid.dev/json/api/produto"
-      );
-    }
-    fetchData();
-  }, [request]);
+  // Mostre uma mensagem na tela, caso a resposta da API seja positiva
 
-  console.log(data);
+  const [form, setForm] = React.useState(
+    camposFormulario.reduce((acc, campo) => {
+      return {
+        ...acc,
+        [campo.id]: "",
+      };
+    })
+  );
 
-  function handleClick({ target }) {
-    setProduto(target.innerText);
+  const [response, setResponse] = React.useState(null);
+
+  function preencherFormulario({ target }) {
+    const { id, value } = target;
+    setForm({ ...form, [id]: value });
   }
 
-  if (error) return <div>Erro: {error}</div>;
-  if (loading) return <p>Carregando...</p>;
-  if (data)
-    return (
-      <div>
-        <button style={{ marginRight: "1rem" }} onClick={handleClick}>
-          notebook
-        </button>
-        <button onClick={handleClick}>celular</button>
+  function enviarFormulario(event) {
+    event.preventDefault();
 
-        {data.map((produto) => (
-          <div key={produto.id}>
-            <img
-              src={produto.fotos[0].src}
-              alt={produto.fotos[0].titulo}
-              style={{ height: "120px", borderRadius: "100px", aspectRatio: 1 }}
-            />
-            <h2>{produto.nome}</h2>
-            <p>{produto.descricao}</p>
-          </div>
-        ))}
-      </div>
-    );
-  else {
-    return null;
+    // Essa é a função utilizado para realizar o POST
+    fetch("https://ranekapi.origamid.dev/json/api/usuario", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // form é o objeto com os dados do formulário
+      body: JSON.stringify(form),
+    }).then((response) => {
+      setResponse(response);
+    });
   }
+
+  return (
+    <form onSubmit={enviarFormulario}>
+      {camposFormulario.map(({ id, label, type }) => (
+        <div key={id}>
+          <label htmlFor={id}>{label}</label>
+          <input
+            id={id}
+            name={id}
+            type={type}
+            value={form[id]}
+            onChange={preencherFormulario}
+          ></input>
+        </div>
+      ))}
+      {response && response.ok && <p>Formulário enviado!</p>}
+      <button>Enviar</button>
+    </form>
+  );
 };
 
 export default App;
