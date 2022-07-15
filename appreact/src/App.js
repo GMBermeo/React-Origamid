@@ -1,74 +1,151 @@
 import React from "react";
-import useFetch from "./Hooks/useFetch";
-
-const camposFormulario = [
-  { id: "nome", label: "Nome", type: "text" },
-  { id: "email", label: "Email", type: "email" },
-  { id: "senha", label: "Senha", type: "password" },
-  { id: "cep", label: "CEP", type: "text" },
-  { id: "rua", label: "Rua", type: "text" },
-  { id: "numero", label: "Número", type: "text" },
-  { id: "bairro", label: "Bairro", type: "text" },
-  { id: "cidade", label: "Cidade", type: "text" },
-  { id: "estado", label: "Estado", type: "text" },
-];
+import Input from "./Form/Input";
 
 const App = () => {
-  // Faça um fetch (POST) para a API abaixo
-  // Para a criação ser aceita é necessário enviar dodos de:
-  // nome, email, senha, cep, rua, numero, bairro, cidade e estado
+  const componentes = [
+    "Camera",
+    "Som",
+    "Bluetooth",
+    "Luz",
+    "GPS",
+    "NFC",
+    "Wi-Fi",
+  ];
+  const cores = [
+    "Vermelho",
+    "Azul",
+    "Verde",
+    "Amarelo",
+    "Laranja",
+    "Roxo",
+    "Branco",
+  ];
+  const [select, setSelect] = React.useState("");
+  const [cor, setCor] = React.useState("");
+  const [radio, setRadio] = React.useState("");
+  const [checkbox, setCheckbox] = React.useState(false);
+  const [selectMultiple, setSelectMultiple] = React.useState(["Bluetooth"]);
 
-  // Mostre uma mensagem na tela, caso a resposta da API seja positiva
+  const [nome, setNome] = React.useState("");
+  const [email, setEmail] = React.useState("");
 
-  const [form, setForm] = React.useState(
-    camposFormulario.reduce((acc, campo) => {
-      return {
-        ...acc,
-        [campo.id]: "",
-      };
-    })
-  );
-
-  const [response, setResponse] = React.useState(null);
-
-  function preencherFormulario({ target }) {
-    const { id, value } = target;
-    setForm({ ...form, [id]: value });
+  function handleRadioChange({ target }) {
+    setRadio(target.value);
   }
 
-  function enviarFormulario(event) {
-    event.preventDefault();
+  function handleMultipleChange({ target }) {
+    if (target.checked) {
+      setSelectMultiple([...selectMultiple, target.value]);
+    } else {
+      setSelectMultiple(selectMultiple.filter((item) => item !== target.value));
+    }
+  }
 
-    // Essa é a função utilizado para realizar o POST
-    fetch("https://ranekapi.origamid.dev/json/api/usuario", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // form é o objeto com os dados do formulário
-      body: JSON.stringify(form),
-    }).then((response) => {
-      setResponse(response);
-    });
+  function verifyMultiple(component) {
+    if (selectMultiple.includes(component)) {
+      return true;
+    }
+    return false;
   }
 
   return (
-    <form onSubmit={enviarFormulario}>
-      {camposFormulario.map(({ id, label, type }) => (
-        <div key={id}>
-          <label htmlFor={id}>{label}</label>
+    <>
+      <h1>Inputs</h1>
+      <form>
+        <h2>Produtos</h2>
+        <Input label="Nome" id="nome" value={nome} setValue={setNome} />
+        <Input
+          label="E-mail"
+          id="email"
+          value={email}
+          setValue={setEmail}
+          required
+        />
+        <label>
           <input
-            id={id}
-            name={id}
-            type={type}
-            value={form[id]}
-            onChange={preencherFormulario}
-          ></input>
-        </div>
-      ))}
-      {response && response.ok && <p>Formulário enviado!</p>}
-      <button>Enviar</button>
-    </form>
+            type="radio"
+            name="produto"
+            value="smartphone"
+            onChange={handleRadioChange}
+          />
+          Smartphone
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="produto"
+            value="notebook"
+            onChange={handleRadioChange}
+          />
+          Notebook
+        </label>
+
+        <h2>Cores</h2>
+        {cores.map((corLoop) => (
+          <label key={corLoop}>
+            <input
+              type="radio"
+              checked={cor === corLoop}
+              value={corLoop}
+              onChange={({ target }) => {
+                setCor(target.value);
+              }}
+            />
+            {corLoop}
+          </label>
+        ))}
+
+        <h2>Marca</h2>
+        <select
+          value={select}
+          onChange={({ target }) => {
+            setSelect(target.value);
+          }}
+          id="marca"
+        >
+          <option disabled value="">
+            Selecione uma marca
+          </option>
+          <option value="Xing-Ling">Xing-Ling</option>
+          <option value="Null">Null</option>
+          <option value="Gettygetty">Gettygetty</option>
+          <option value="Hongue Kongue">Hongue Kongue</option>
+        </select>
+
+        <h2>Componentes</h2>
+        {componentes.map((componente) => (
+          <label key={componente}>
+            <input
+              type="checkbox"
+              checked={verifyMultiple(componente)}
+              value={componente}
+              onChange={handleMultipleChange}
+            />
+            {componente}
+          </label>
+        ))}
+
+        {radio && (
+          <h4>
+            Você escolheu o {radio} {cor && cor}{" "}
+            {select && "da marca " + select}{" "}
+            {selectMultiple && "com " + selectMultiple.join(", ")}.
+          </h4>
+        )}
+        <h2>Termos de uso</h2>
+        <label>
+          <input
+            type="checkbox"
+            value="Termos"
+            checked={checkbox}
+            onChange={({ target }) => setCheckbox(target.checked)}
+          />
+          Aceito os termos
+        </label>
+      </form>
+      <br />
+      {checkbox && <button>Comprar</button>}
+    </>
   );
 };
 
