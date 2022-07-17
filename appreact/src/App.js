@@ -2,10 +2,13 @@ import React from "react";
 import Pergunta from "./Components/Pergunta";
 
 const App = () => {
-  const [numeroPergunta, setNumeroPergunta] = React.useState(0);
-  const [resposta, setResposta] = React.useState(null);
-  const [pontuacao, setPontuacao] = React.useState(0);
-
+  const [respostas, setRespostas] = React.useState({
+    p1: "",
+    p2: "",
+    p3: "",
+    p4: "",
+  });
+  const [slide, setSlide] = React.useState(0);
   const perguntas = [
     {
       pergunta: "Qual método é utilizado para criar componentes?",
@@ -41,33 +44,39 @@ const App = () => {
     },
   ];
 
-  function proximaPergunta() {
-    verificaResposta();
-    setNumeroPergunta(numeroPergunta + 1);
-    setResposta(null);
+  let corretas = perguntas.filter(
+    ({ id, resposta }) => respostas[id] === resposta
+  );
+
+  function handleChange({ target }) {
+    setRespostas({ ...respostas, [target.id]: target.value });
   }
 
-  function verificaResposta() {
-    if (resposta === perguntas[numeroPergunta].resposta) {
-      setPontuacao(pontuacao + 1);
+  function proximoSlide(event) {
+    if (slide < perguntas.length - 1) {
+      setSlide(slide + 1);
+    } else {
+      setSlide(5);
     }
   }
 
   return (
     <>
-      {numeroPergunta <= perguntas.length - 1 ? (
-        <>
+      <form onSubmit={(event) => event.preventDefault}>
+        {perguntas.map((pergunta, index) => (
           <Pergunta
-            perguntas={perguntas}
-            numeroPergunta={numeroPergunta}
-            resposta={resposta}
-            setResposta={setResposta}
+            active={slide === index}
+            key={pergunta.id}
+            value={respostas[pergunta.id]}
+            onChange={handleChange}
+            {...pergunta}
           />
-
-          {resposta && <button onClick={proximaPergunta}>Próxima</button>}
-        </>
+        ))}
+      </form>
+      {slide === 5 ? (
+        <p>Você acertou {corretas.length} perguntas.</p>
       ) : (
-        <h1>Você acertou {pontuacao} perguntas.</h1>
+        <button onClick={proximoSlide}>Próxima</button>
       )}
     </>
   );
