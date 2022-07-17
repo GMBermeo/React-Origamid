@@ -1,6 +1,17 @@
 import React from "react";
 
-const Input = ({ id, label, setValue, type = "text", ...props }) => {
+const Input = ({
+  id,
+  label,
+  setValue,
+  onChange,
+  type = "text",
+  value,
+  onBlur,
+  placeholder,
+  error,
+  maxLength,
+}) => {
   return (
     <>
       <label htmlFor={id}>{label}</label>
@@ -8,9 +19,13 @@ const Input = ({ id, label, setValue, type = "text", ...props }) => {
         id={id}
         name={id}
         type={type}
-        onChange={({ target }) => setValue(target.value)}
-        {...props}
+        onChange={onChange}
+        placeholder={placeholder}
+        onBlur={onBlur}
+        value={value}
+        maxLength={maxLength}
       />
+      {error && <p>{error}</p>}
     </>
   );
 };

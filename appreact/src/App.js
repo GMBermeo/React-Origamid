@@ -1,9 +1,12 @@
 import React from "react";
+import useForm from "./Hooks/useForm";
+import Checkbox from "./Form/Checkbox";
 import Input from "./Form/Input";
+import Radio from "./Form/Radio";
 import Select from "./Form/Select";
 
 const App = () => {
-  const componentes = [
+  const componentesOptions = [
     "Camera",
     "Som",
     "Bluetooth",
@@ -21,138 +24,88 @@ const App = () => {
     "Roxo",
     "Branco",
   ];
-  const [select, setSelect] = React.useState("");
-  const [cor, setCor] = React.useState("");
-  const [radio, setRadio] = React.useState("");
-  const [checkbox, setCheckbox] = React.useState(false);
-  const [selectMultiple, setSelectMultiple] = React.useState(["Bluetooth"]);
 
-  const [nome, setNome] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [produto, setProduto] = React.useState("");
-
-  function handleRadioChange({ target }) {
-    setRadio(target.value);
-  }
-
-  function handleMultipleChange({ target }) {
-    if (target.checked) {
-      setSelectMultiple([...selectMultiple, target.value]);
+  function handleSubmit(event) {
+    event.preventDefault();
+    if (nome.validate() && cep.validate() && email.validate()) {
+      console.log("Enviar");
     } else {
-      setSelectMultiple(selectMultiple.filter((item) => item !== target.value));
+      console.log("Não enviar");
     }
   }
 
-  function verifyMultiple(component) {
-    if (selectMultiple.includes(component)) {
-      return true;
-    }
-    return false;
-  }
+  const nome = useForm();
+  const sobrenome = useForm(false);
+  const email = useForm("email");
+  const cep = useForm("cep");
+  const [produto, setProduto] = React.useState("");
+  const [marca, setMarca] = React.useState("");
+  const [cor, setCor] = React.useState("Branco");
+  const [componentes, setComponentes] = React.useState([]);
+  const [termos, setTermos] = React.useState([]);
 
   return (
     <>
       <h1>Inputs</h1>
-      <form>
-        <h2>Produtos</h2>
-        <Input label="Nome" id="nome" value={nome} setValue={setNome} />
+      <form onSubmit={handleSubmit}>
+        <h2>Comprar</h2>
+        <Input label="Nome" id="nome" value={nome} {...nome} />
         <Input
-          label="E-mail"
-          id="email"
-          value={email}
-          setValue={setEmail}
-          required
+          label="Sobrenome"
+          id="sobrenome"
+          value={sobrenome}
+          {...sobrenome}
         />
+        <Input label="E-mail" id="email" type="email" {...email} />
+        <Input
+          label="CEP"
+          id="CEP"
+          placeholder="00000-000"
+          maxLength={9}
+          {...cep}
+        />
+
+        <h2>Produto</h2>
         <Select
-          options={["Smartphone", "Tablet"]}
+          options={["Smartphone", "Tablet", "Smartspeaker"]}
           value={produto}
           setValue={setProduto}
         />
 
-        <label>
-          <input
-            type="radio"
-            name="produto"
-            value="smartphone"
-            onChange={handleRadioChange}
-          />
-          Smartphone
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="produto"
-            value="notebook"
-            onChange={handleRadioChange}
-          />
-          Notebook
-        </label>
-
-        <h2>Cores</h2>
-        {cores.map((corLoop) => (
-          <label key={corLoop}>
-            <input
-              type="radio"
-              checked={cor === corLoop}
-              value={corLoop}
-              onChange={({ target }) => {
-                setCor(target.value);
-              }}
-            />
-            {corLoop}
-          </label>
-        ))}
-
         <h2>Marca</h2>
-        <select
-          value={select}
-          onChange={({ target }) => {
-            setSelect(target.value);
-          }}
-          id="marca"
-        >
-          <option disabled value="">
-            Selecione uma marca
-          </option>
-          <option value="Xing-Ling">Xing-Ling</option>
-          <option value="Null">Null</option>
-          <option value="Gettygetty">Gettygetty</option>
-          <option value="Hongue Kongue">Hongue Kongue</option>
-        </select>
+        <Select
+          options={["Xing-Ling", "Null Phone", "Gettygetty", "Hongue Kongue"]}
+          value={marca}
+          setValue={setMarca}
+        />
+
+        <h2>Cor</h2>
+        <Radio options={cores} value={cor} setValue={setCor} />
 
         <h2>Componentes</h2>
-        {componentes.map((componente) => (
-          <label key={componente}>
-            <input
-              type="checkbox"
-              checked={verifyMultiple(componente)}
-              value={componente}
-              onChange={handleMultipleChange}
-            />
-            {componente}
-          </label>
-        ))}
+        <Checkbox
+          options={componentesOptions}
+          value={componentes}
+          setValue={[setComponentes]}
+        />
 
-        {radio && (
+        {produto && (
           <h4>
-            Você escolheu o {radio} {cor && cor}{" "}
-            {select && "da marca " + select}{" "}
-            {selectMultiple && "com " + selectMultiple.join(", ")}.
+            Você escolheu o {produto} {cor && cor}
+            {marca && " da marca " + marca}
+            {componentes.length > 0 && " com " + componentes.join(", ")}.
           </h4>
         )}
+
         <h2>Termos de uso</h2>
-        <label>
-          <input
-            type="checkbox"
-            value="Termos"
-            checked={checkbox}
-            onChange={({ target }) => setCheckbox(target.checked)}
-          />
-          Aceito os termos
-        </label>
+        <Checkbox
+          options={["Li e aceito os termos"]}
+          value={termos}
+          setValue={setTermos}
+        />
       </form>
       <br />
-      {checkbox && <button>Comprar</button>}
+      {termos.length > 0 && <button>Comprar</button>}
     </>
   );
 };
