@@ -1,25 +1,34 @@
 import React from "react";
-import Radio from "../Form/Radio";
 
-const Pergunta = ({ perguntas, numeroPergunta, resposta, setResposta }) => {
+const Pergunta = ({ pergunta, options, id, value, onChange, active }) => {
+  if (active === false) return null;
   return (
     <fieldset
       style={{
         padding: "2rem",
         marginBottom: "1rem",
         borderColor: "#00000022",
-        borderRadius: "8px",
+        borderRadius: "6px",
       }}
     >
       <legend style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-        {perguntas[numeroPergunta].pergunta}
+        {pergunta}
       </legend>
-      <Radio
-        style={{ marginBottom: "1rem" }}
-        options={perguntas[numeroPergunta].options}
-        value={resposta}
-        setValue={setResposta}
-      />
+      {options.map((option) => (
+        <label
+          key={option}
+          style={{ marginBottom: "1rem", fontFamily: "monospace" }}
+        >
+          <input
+            type="radio"
+            value={option}
+            checked={value === option}
+            onChange={onChange}
+            id={id}
+          />
+          {option}
+        </label>
+      ))}
     </fieldset>
   );
 };
