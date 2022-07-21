@@ -6,7 +6,7 @@ import Footer from "../components/ui/Footer/Footer";
 import Produtos from "./produtos";
 import Contato from "./contato";
 import Produto from "./produto/produto";
-import NotFound from "./notFound";
+import NotFounded from "./notFounded";
 
 const App = () => {
   return (
@@ -17,7 +17,7 @@ const App = () => {
           <Route path="/" element={<Produtos />} />
           <Route path="contato" element={<Contato />} />
           <Route path="produto/:id/*" element={<Produto />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<NotFounded />} />
         </Routes>
         <Footer />
       </BrowserRouter>
