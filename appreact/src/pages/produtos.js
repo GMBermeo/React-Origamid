@@ -27,9 +27,9 @@ const Produtos = () => {
                 <img
                   src={produto.fotos[0].src}
                   alt={produto.fotos[0].titulo}
-                  className="w-full rounded-md cursor-pointer"
+                  className="w-full cursor-pointer rounded-md"
                 />
-                <p className="text-center text-base mt-2">{produto.nome}</p>
+                <p className="mt-2 text-center text-base">{produto.nome}</p>
               </div>
             </Link>
           ))}

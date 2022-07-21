@@ -25,10 +25,10 @@ const Produto = () => {
     <>
       <Head title={produto.nome} />
       <div className="slideLeft flex">
-        <div className="flex-initial w-1/2 slideUpSlow">
+        <div className="slideUpSlow w-1/2 flex-initial">
           {produto.fotos.map((foto) => (
             <img
-              className="rounded-lg mb-4"
+              className="mb-4 rounded-lg"
               src={foto.src}
               alt={foto.titulo}
               key={foto.src}
@@ -36,11 +36,11 @@ const Produto = () => {
           ))}
         </div>
         <div className="ml-6 w-1/2">
-          <h2 className="font-bold text-3xl">{produto.nome}</h2>
+          <h2 className="text-3xl font-bold">{produto.nome}</h2>
           <label
             className={`${
               produto.vendido ? "bg-green-300" : "bg-red-300"
-            } px-3 py-2 my-2 rounded-md text-base w-fit`}
+            } my-2 w-fit rounded-md px-3 py-2 text-base`}
           >
             R$ {produto.preco}
           </label>
