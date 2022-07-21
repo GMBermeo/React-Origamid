@@ -1,12 +1,12 @@
 import React from "react";
+import "../assets/animations.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Produtos from "./produtos";
-import NotFound from "./notFound";
 import Contato from "./contato";
 import Produto from "./produto/produto";
 import Header from "../components/ui/Header/Header";
 import Footer from "../components/ui/Footer/Footer";
-import "../assets/animations.css";
+import NotFound from "./notFound";
 
 const App = () => {
   return (

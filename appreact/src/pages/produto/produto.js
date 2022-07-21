@@ -19,7 +19,7 @@ const Produto = () => {
 
   // console.log(params);
 
-  if (loading || !produto) return <p>Carregando</p>;
+  if (loading || !produto) return <div className="loading" />;
 
   return (
     <>

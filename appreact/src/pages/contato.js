@@ -2,7 +2,7 @@ import React from "react";
 import Head from "../components/common/Head";
 import fotoContato from "../public/contato.jpg";
 
-const Sobre = () => {
+const Contato = () => {
   return (
     <>
       <Head title="Contato" />
@@ -10,7 +10,7 @@ const Sobre = () => {
         <div className="flex-initial w-1/2">
           <img
             src={fotoContato}
-            alt="Imagem de uma máquina de escrever.'"
+            alt="Imagem de uma máquina de escrever."
             className="w-full h-auto rounded-md slideUpSlow"
           />
         </div>
@@ -27,4 +27,4 @@ const Sobre = () => {
   );
 };
 
-export default Sobre;
+export default Contato;
