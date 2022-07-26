@@ -10,18 +10,20 @@ import NotFounded from "./notFounded";
 
 const App = () => {
   return (
-    <div className="container mx-auto min-h-screen px-5">
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Produtos />} />
-          <Route path="contato" element={<Contato />} />
-          <Route path="produto/:id/*" element={<Produto />} />
-          <Route path="*" element={<NotFounded />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </div>
+    <>
+      <div className="container mx-auto flex min-h-screen flex-1 flex-col px-5">
+        <BrowserRouter>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Produtos />} />
+            <Route path="contato" element={<Contato />} />
+            <Route path="produto/:id" element={<Produto />} />
+            <Route path="*" element={<NotFounded />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+      <Footer />
+    </>
   );
 };
 

@@ -1,29 +1,25 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import Head from "../../components/common/Head";
+import useFetch from "../../lib/hooks/useFetch";
 
 const Produto = () => {
-  const [produto, setProduto] = React.useState();
-  const [loading, setLoading] = React.useState(false);
+  const { request, data: produto, loading, error } = useFetch();
   const { id } = useParams();
 
   React.useEffect(() => {
-    setLoading(true);
-    fetch(`https://ranekapi.origamid.dev/json/api/produto/${id}`)
-      .then((r) => r.json())
-      .then((json) => setProduto(json));
-    setLoading(false);
+    async function fetchData() {
+      await request(`https://ranekapi.origamid.dev/json/api/produto/${id}`);
+    }
+    fetchData();
+  }, [id, request]);
 
-    // console.log(produto);
-  }, [id]);
-
-  // console.log(params);
-
-  if (loading || !produto) return <div className="loading" />;
-
+  if (loading) return <div className="loading" />;
+  if (error) return <p>{error}</p>;
+  if (produto === null) return null;
   return (
     <>
-      <Head title={produto.nome} />
+      <Head title={produto.nome} description={produto.descricao} />
       <div className="slideLeft flex">
         <div className="slideUpSlow w-1/2 flex-initial">
           {produto.fotos.map((foto) => (

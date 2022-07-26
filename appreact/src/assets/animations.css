@@ -22,6 +22,11 @@
   animation: zoomIn 0.8s forwards;
 }
 
+.fadeIn {
+  opacity: 0;
+  animation: zoomIn 0.8s forwards;
+}
+
 @keyframes animateLeft {
   to {
     opacity: 1;
